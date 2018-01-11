@@ -65,12 +65,15 @@ def make_text(chains):
         key = (key[1], word)
 
     new_tweet = (" ".join(words))
-    
-    if len(new_tweet) > 140:
-        return new_tweet[:140]
-
-    return new_tweet
-
+    n = 140
+    if len(new_tweet) > n:
+        while True:
+            if new_tweet[n] == " ":
+                return new_tweet[:n]
+            else:
+                n -= 1
+    else: 
+        return new_tweet
 
 
 def tweet(chain):
@@ -79,15 +82,19 @@ def tweet(chain):
     # Use Python os.environ to get at environmental variables
     # Note: you must run `source secrets.sh` before running this file
     # to make sure these environmental variables are set.
-    print api.VerifyCredentials()
+    # print api.VerifyCredentials()
 
     #send a tweet
     status = api.PostUpdate(chain)
-    print
+
     print status.text
 
+    user_input = raw_input("Enter/Return to tweet again [q to quit] >  ")
 
-
+    if user_input != "q":
+        new_chains = make_chains(text)
+        new_chain = make_text(chains)
+        tweet(new_chain)
 
 
 # Get the filenames from the user through a command line prompt, ex:
